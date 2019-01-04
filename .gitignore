@@ -1,0 +1,13 @@
+[Bb]in/
+[Oo]bj/
+*.suo
+*.csproj.user
+*.DotSettings.user
+*.sln.DotSettings
+.vs/
+node_modules/
+desktop.ini
+bundle.js
+bundle.js.map
+.idea/
+*.iml

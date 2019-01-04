@@ -1,0 +1,7 @@
+.payment-api__ul {
+    list-style: none;
+}
+
+.payment-api__li {
+    display: inline-block;
+}
