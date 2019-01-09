@@ -1,0 +1,22 @@
+body {
+    background: rgb(43, 43, 43);
+    color: rgb(156, 118, 49);
+}
+
+td {
+    padding: 5px;
+    background: rgb(43, 43, 43);
+    color: rgb(128, 193, 79);
+}
+
+#cardPaymentSearchColumn, #cardPaymentSortColumn, #cardPaymentPrefix {
+    margin: auto 5px;
+}
+
+.unsafePaymentRow {
+    color: red;
+}
+
+.safePaymentRow {
+
+}

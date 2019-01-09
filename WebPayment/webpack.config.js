@@ -4,15 +4,16 @@ const webpack = require('webpack');
 const path = require('path');
 
 const bundleFolder = "./wwwroot/assets/";
-const srcFolder = "./App/"
+const srcFolder = "./App/";
+
+const adminSpaIndex = './front/admin/src/index.jsx';
+const paymentSpaIndex = './front/payment/src/index.jsx';
 
 module.exports = {
-  entry: [
-    srcFolder + "index.jsx" 
-  ], 
+  entry: { 'admin': adminSpaIndex, 'payment': paymentSpaIndex },
   devtool: "source-map",
   output: {
-    filename: "bundle.js",
+    filename: "[name].bundle.js",
     publicPath: 'assets/',
     path: path.resolve(__dirname, bundleFolder)
   },
@@ -29,6 +30,10 @@ module.exports = {
       {
         test: /\.css$/,
         use: ["style-loader", "css-loader"]
+      },
+      {
+        test: /\.(jpe?g|gif|png)$/,
+        loader: "file-loader"
       }
     ]
   },

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
 using DBRepository.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -9,49 +11,16 @@ namespace DBRepository.Repositories
 {
     public class PaymentRepository : BaseRepository, IPaymentRepository
     {
-        public PaymentRepository(string connectionString, IRepositoryContextFactory contextFactory) : base(connectionString, contextFactory) { }
-
-        public async Task<Page<Post>> GetPosts(int index, int pageSize, string tag = null)
+        public PaymentRepository(string connectionString, IRepositoryContextFactory contextFactory) : base(connectionString, contextFactory)
         {
-            var result = new Page<Post> { CurrentPage = index, PageSize = pageSize };
-
-            using (var context = ContextFactory.CreateDbContext(ConnectionString)) // 1
-            {                
-                var query = context.Posts.AsQueryable();
-                if (!string.IsNullOrWhiteSpace(tag))
-                {
-                    query = query.Where(p => p.Tags.Any(t => t.TagName == tag));
-                }
-
-                result.TotalPages = await query.CountAsync();
-                //query = query
-                //    .Include(p => p.Tags)
-                //    .Include(p => p.Comments)
-                //    .OrderByDescending(p => p.CreatedDate)
-                //    .Skip(index * pageSize)
-                //    .Take(pageSize); // 2
-
-                try
-                {
-                    result.Records = await query.ToListAsync(); //3
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                    throw;
-                }
-               
-            }
-
-            return result;
         }
-
-        public async Task SavePaymentAnyBankCardAsync(PaymentAnyBankCard payment)
+      
+        public async Task SaveCardPaymentAsync(CardPayment cardPayment)
         {
             using (var context = ContextFactory.CreateDbContext(ConnectionString))
             {
-                await context.AddAsync(payment).ConfigureAwait(false);
-                await context.SaveChangesAsync().ConfigureAwait(false);
+                await context.AddAsync(cardPayment).ConfigureAwait(false);
+                await context.SaveChangesAsync().ConfigureAwait(false);                
             }
         }
 
@@ -63,5 +32,123 @@ namespace DBRepository.Repositories
                 await context.SaveChangesAsync().ConfigureAwait(false);
             }
         }
+
+        public async Task<IEnumerable<CardPayment>> SelectCardPaymentsAsync
+        (
+            SearchParameters searchParameters,
+            SortParameters sortParameters
+        )
+        {
+            using (var context = ContextFactory.CreateDbContext(ConnectionString))
+            {              
+                var query = context.CardPayments.AsQueryable();
+
+                if (searchParameters?.Column != null && searchParameters.Prefix != null)
+                {                   
+                    query = query.Where(payment =>
+                        typeof(CardPayment)
+                            .GetProperty(searchParameters.Column)
+                            .GetValue(payment)
+                            .ToString()
+                            .StartsWith(searchParameters.Prefix));
+                }
+
+                if (sortParameters?.Column != null)
+                {
+                    if (sortParameters.DescendingOrder)
+                    {
+                        query = query.OrderByDescending(payment =>
+                            typeof(CardPayment)
+                                .GetProperty(sortParameters.Column)
+                                .GetValue(payment)
+                                .ToString());
+                    }
+                    else
+                    {
+                        var columnProp = typeof(CardPayment).GetProperty(sortParameters.Column);
+                        query = query.OrderBy(payment =>
+                            columnProp
+                                .GetValue(payment)
+                                .ToString());
+                    }                                            
+                }
+                    
+                return await query.ToListAsync().ConfigureAwait(false);
+            }           
+        }
+
+        public async Task<IEnumerable<PaymentRequest>> SelectPaymentRequestsAsync
+        (
+            SearchParameters searchParameters,
+            SortParameters sortParameters
+        )
+        {
+            using (var context = ContextFactory.CreateDbContext(ConnectionString))
+            {
+                var query = context.PaymentRequests.AsQueryable();
+
+                if (searchParameters?.Column != null && searchParameters.Prefix != null)
+                {
+                    query = query.Where(request =>
+                        typeof(PaymentRequest)
+                            .GetProperty(searchParameters.Column)
+                            .GetValue(request)
+                            .ToString()
+                            .StartsWith(searchParameters.Prefix));
+                }
+
+                if (sortParameters?.Column != null)
+                {
+                    if (sortParameters.DescendingOrder)
+                    {
+                        query = query.OrderByDescending(payment =>
+                            typeof(PaymentRequest)
+                                .GetProperty(sortParameters.Column)
+                                .GetValue(payment)
+                                .ToString());
+                    }
+                    else
+                    {
+                        var columnProp = typeof(PaymentRequest).GetProperty(sortParameters.Column);
+                        query = query.OrderBy(payment =>
+                            columnProp
+                                .GetValue(payment)
+                                .ToString());
+                    }
+                }
+
+                return await query.ToListAsync().ConfigureAwait(false);
+            }
+        }
+
+        public async Task ToggleCardPaymentSafetyAsync(Guid paymentId, bool isSafe)
+        {
+            using (var context = ContextFactory.CreateDbContext(ConnectionString))
+            {
+                var payment = context.CardPayments
+                    .Single(p => p.CardPaymentId == paymentId);
+
+                payment.IsSafe = isSafe;
+
+                context.CardPayments.Attach(payment);
+                context.Entry(payment).Property(p => p.IsSafe).IsModified = true;
+                await context.SaveChangesAsync().ConfigureAwait(false);
+            }
+        }
+
+        //var query = @"select *
+        //                  from card_payments";
+
+        //if (sortColumn != null)
+        //    query += " order by ";         
+
+        //using (var conn = await dbConnectionFactory.OpenAsync(cancellation).ConfigureAwait(false))
+        //{
+        //    await conn.QueryAsync<CardPayment>(
+        //            @"select *
+        //                  from card_payments
+        //                  ")
+        //              .ConfigureAwait(false);
+        //}
     }
 }

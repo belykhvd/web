@@ -1,0 +1,71 @@
+.mainContainer {
+  margin: 0 auto;
+  width: 80%;
+  height: 700px;
+  border: 1px solid rgba(91, 91, 91, 0.5);
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+
+.mainHeader {
+  margin: 20px;
+  width: calc(100% - 40px);
+  height: auto;
+  border-bottom: 1px solid rgba(0,0,0,0.5);
+}
+
+.headerInfo {
+  display: inline-block;
+  width: 80%;
+  height: auto;
+}
+
+.headerPhoto {
+  display: inline-block;
+  width: 20%;
+  height: auto;
+  min-height: 100px;
+  background: url("bird.png") no-repeat;
+}
+
+.mainApi {
+  width: 100%;
+  margin: 20px;
+}
+
+.mainFooter {
+  width: calc(100% - 40px);
+  border-top: 1px solid rgba(0,0,0,0.5);
+  margin: 20px;
+}
+
+.footerAd {
+  display: inline-block;
+  width: 33%;
+  height: 96px;
+}
+
+#ad1 {
+  background: url("ad1.png") no-repeat;
+}
+
+#ad2 {
+  background: url("ad1.png") no-repeat;
+}
+
+#ad3 {
+  background: url("ad1.png") no-repeat;
+}
+
+a {
+  text-decoration: none;
+  color: rgb(152, 118, 169); /*#530e8f;*/
+  margin: 5px;
+}
+
+.paymentApi-ul {
+  list-style: none;
+}
+
+.payment-api__li {
+  display: inline-block;
+}

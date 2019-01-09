@@ -1,0 +1,18 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width" />
+	<script type="text/javascript">
+		constants = {
+			selectCardPayments: '@Url.RouteUrl("DefaultApi", new {controller = "Payment", action = "SelectCardPayments" })',
+			selectPaymentRequests: '@Url.RouteUrl("DefaultApi", new {controller = "Payment", action = "SelectPaymentRequests" })',
+			markUnsafeCardPayment: '@Url.RouteUrl("DefaultApi", new {controller = "Payment", action = "ToggleCardPaymentSafety" })'
+		}
+	</script>
+	<title>Administrative Page</title>
+</head>
+<body>
+	<div id="root"></div>
+	<script type="text/javascript" src="@Url.Content("~/assets/admin.bundle.js")"></script>
+</body>
+</html>

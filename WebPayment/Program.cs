@@ -25,7 +25,7 @@ namespace WebPayment
 
                 var factory = services.GetRequiredService<IRepositoryContextFactory>();
 
-                factory.CreateDbContext(config.GetConnectionString("DefaultConnection")).Database.Migrate(); // 3
+                //factory.CreateDbContext(config.GetConnectionString("DefaultConnection")).Database.Migrate(); // 3
             }
 
             host.Run();

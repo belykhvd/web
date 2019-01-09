@@ -3,17 +3,16 @@
 <head>
 	<meta name="viewport" content="width=device-width" />
 	<script type="text/javascript">
-		constants = {
-			getPage: '@Url.RouteUrl("DefaultApi", new {controller = "Payment", action = "page" })',
-			processPaymentAnyBankCard: '@Url.RouteUrl("DefaultApi", new {controller = "Payment", action = "ProcessPaymentAnyBankCard" })',
+		constants = {			
+			processCardPayment: '@Url.RouteUrl("DefaultApi", new {controller = "Payment", action = "ProcessCardPayment" })',
 			processPaymentRequest: '@Url.RouteUrl("DefaultApi", new {controller = "Payment", action = "ProcessPaymentRequest" })'
 		}
 	</script>
-	<title>Index</title>
+	<title>Платежи</title>
 </head>
 <body>
-<div id="content">
+<div id="root">
 </div>
-<script type="text/javascript" src="@Url.Content("~/assets/bundle.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/assets/payment.bundle.js")"></script>
 </body>
 </html>

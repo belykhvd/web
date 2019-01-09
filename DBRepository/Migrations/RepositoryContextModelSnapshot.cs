@@ -19,44 +19,28 @@ namespace DBRepository.Migrations
                 .HasAnnotation("ProductVersion", "2.1.4-rtm-31024")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            modelBuilder.Entity("Models.Comment", b =>
+            modelBuilder.Entity("Models.CardPayment", b =>
                 {
-                    b.Property<Guid>("CommentId")
+                    b.Property<Guid>("CardPaymentId")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Author");
-
-                    b.Property<string>("Body");
-
-                    b.Property<DateTime>("CreateDate");
-
-                    b.Property<Guid>("PostId");
-
-                    b.HasKey("CommentId");
-
-                    b.ToTable("Comments");
-                });
-
-            modelBuilder.Entity("Models.PaymentAnyBankCard", b =>
-                {
-                    b.Property<Guid>("PaymentAnyBankCardId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("CardCvc");
-
-                    b.Property<string>("CardExpiration");
 
                     b.Property<string>("CardNumber");
 
-                    b.Property<decimal>("TransactionAmount");
+                    b.Property<string>("Comment");
 
-                    b.Property<string>("UserComment");
+                    b.Property<string>("Cvc");
 
-                    b.Property<string>("UserEmail");
+                    b.Property<string>("Email");
 
-                    b.HasKey("PaymentAnyBankCardId");
+                    b.Property<string>("Expiration");
 
-                    b.ToTable("PaymentsAnyBankCard");
+                    b.Property<bool>("IsSafe");
+
+                    b.Property<decimal>("Sum");
+
+                    b.HasKey("CardPaymentId");
+
+                    b.ToTable("CardPayments");
                 });
 
             modelBuilder.Entity("Models.PaymentRequest", b =>
@@ -76,69 +60,11 @@ namespace DBRepository.Migrations
 
                     b.Property<decimal>("Sum");
 
-                    b.Property<string>("Vat");
+                    b.Property<int>("Vat");
 
                     b.HasKey("PaymentRequestId");
 
                     b.ToTable("PaymentRequests");
-                });
-
-            modelBuilder.Entity("Models.Post", b =>
-                {
-                    b.Property<Guid>("PostId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Body");
-
-                    b.Property<Guid>("Comments");
-
-                    b.Property<DateTime>("CreatedDate");
-
-                    b.Property<string>("Header");
-
-                    b.HasKey("PostId");
-
-                    b.ToTable("Posts");
-                });
-
-            modelBuilder.Entity("Models.Tag", b =>
-                {
-                    b.Property<Guid>("TagId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<Guid>("PostId");
-
-                    b.Property<string>("TagName");
-
-                    b.HasKey("TagId");
-
-                    b.HasIndex("PostId");
-
-                    b.ToTable("Tags");
-                });
-
-            modelBuilder.Entity("Models.User", b =>
-                {
-                    b.Property<Guid>("UserId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<bool>("IsAdmin");
-
-                    b.Property<string>("Login");
-
-                    b.Property<string>("Password");
-
-                    b.HasKey("UserId");
-
-                    b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("Models.Tag", b =>
-                {
-                    b.HasOne("Models.Post")
-                        .WithMany("Tags")
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

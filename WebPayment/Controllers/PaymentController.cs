@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using DBRepository;
 using DBRepository.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Models;
@@ -14,56 +16,47 @@ namespace WebPayment.Controllers
         public PaymentController(IPaymentRepository paymentRepository)
         {
             this.paymentRepository = paymentRepository;
-        }
+        }     
 
-        [Route("page")]
+        [Route(nameof(ProcessCardPayment))]
         [HttpGet]
-        public async Task<Page<Post>> GetPosts(int pageIndex, string tag)
-        {
-            try
-            {
-                return await paymentRepository.GetPosts(pageIndex, 10, tag);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }           
-        }
-
-        [Route(nameof(ProcessPaymentAnyBankCard))]
-        [HttpGet]
-        public async Task ProcessPaymentAnyBankCard
+        public async Task<WrappedResponse<string>> ProcessCardPayment
         (
             string cardNumber,
-            string cardExpiration,
-            string cardCvc,
-            decimal transactionAmount,
-            string userComment,
-            string userEmail
+            string expiration,
+            string cvc,
+            decimal sum,
+            string comment,
+            string email
         )
         {
-            var payment = new PaymentAnyBankCard
+            var payment = new CardPayment
             {
                 CardNumber = cardNumber,
-                CardExpiration = cardExpiration,
-                CardCvc = cardCvc,
-                TransactionAmount = transactionAmount,
-                UserComment = userComment,
-                UserEmail = userEmail
+                Expiration = expiration,
+                Cvc = cvc,
+                Sum = sum,
+                Comment = comment,
+                Email = email
             };
 
-            await paymentRepository.SavePaymentAnyBankCardAsync(payment).ConfigureAwait(false);
+            var validationResult = payment.Validate();
+            if (!validationResult.IsValid)
+                return WrappedResponse<string>.Fail($"Неверный формат: {validationResult.Error}");
+
+            await paymentRepository.SaveCardPaymentAsync(payment).ConfigureAwait(false);
+
+            return WrappedResponse<string>.Success();
         }
 
-        [Route("ProcessPaymentRequest")]
+        [Route(nameof(ProcessPaymentRequest))]
         [HttpGet]
-        public async Task ProcessPaymentRequestAsync
+        public async Task<WrappedResponse<string>> ProcessPaymentRequest
         (
             string inn,
             string bic,
             string accountNumber,
-            string vat,
+            int vat,
             decimal sum,
             string phone,
             string email
@@ -80,7 +73,97 @@ namespace WebPayment.Controllers
                 Email = email
             };
 
+            var validationResult = paymentRequest.Validate();
+            if (!validationResult.IsValid)
+                return WrappedResponse<string>.Fail($"Неверный формат: {validationResult.Error}");
+
             await paymentRepository.SavePaymentRequestAsync(paymentRequest).ConfigureAwait(false);
+
+            return WrappedResponse<string>.Success();
+        }
+
+        [Route(nameof(SelectCardPayments))]
+        [HttpGet]
+        public async Task<WrappedResponse<IEnumerable<CardPayment>>> SelectCardPayments
+        (
+            string searchColumn,
+            string prefix,
+            string sortColumn,
+            bool descendingOrder
+        )
+        {
+            var searchParameters = new SearchParameters
+            {
+                Column = searchColumn,
+                Prefix = prefix
+            };
+
+            var sortParameters = new SortParameters
+            {
+                Column = sortColumn,
+                DescendingOrder = descendingOrder
+            };
+
+            var response = await paymentRepository.SelectCardPaymentsAsync(searchParameters, sortParameters)
+                                                  .ConfigureAwait(false);
+
+            return WrappedResponse<IEnumerable<CardPayment>>.Success(response);
+        }
+
+        [Route(nameof(SelectPaymentRequests))]
+        [HttpGet]
+        public async Task<WrappedResponse<IEnumerable<PaymentRequest>>> SelectPaymentRequests
+        (
+            string searchColumn,
+            string prefix,
+            string sortColumn,
+            bool descendingOrder
+        )
+        {
+            var searchParameters = new SearchParameters
+            {
+                Column = searchColumn,
+                Prefix = prefix
+            };
+
+            var sortParameters = new SortParameters
+            {
+                Column = sortColumn,
+                DescendingOrder = descendingOrder
+            };
+
+            var response = await paymentRepository.SelectPaymentRequestsAsync(searchParameters, sortParameters)
+                                                  .ConfigureAwait(false);
+
+            return WrappedResponse<IEnumerable<PaymentRequest>>.Success(response);
+        }
+        
+        [Route(nameof(ToggleCardPaymentSafety))]
+        [HttpGet]
+        public async Task<WrappedResponse<string>> ToggleCardPaymentSafety(Guid paymentId, bool isSafe)
+        {
+            await paymentRepository.ToggleCardPaymentSafetyAsync(paymentId, isSafe).ConfigureAwait(false);
+
+            return WrappedResponse<string>.Success();
+        }
+
+        public class WrappedResponse<T>
+        {
+            public bool IsSuccess { get; set; }
+            public T Data { get; set; }
+            public string Error { get; set; }
+
+            public static WrappedResponse<T> Success(T data = default) => new WrappedResponse<T>
+            {
+                IsSuccess = true,
+                Data = data
+            };
+
+            public static WrappedResponse<T> Fail(string error) => new WrappedResponse<T>
+            {
+                IsSuccess = false,
+                Error = error
+            };
         }
     }
 }
