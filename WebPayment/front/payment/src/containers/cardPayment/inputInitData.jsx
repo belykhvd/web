@@ -1,3 +1,5 @@
+import validators from "../../redux/validators.jsx";
+
 export default [
     {
         "key": "b9a082c9-ce7c-4277-9d95-6c6b9ccdcd50",
@@ -7,37 +9,41 @@ export default [
         "inputPattern": "\\d{16}",
         "inputMaxLength": "16",
         "inputFormatHint": "Ровно 16 цифр",
-        "inputRequired": true
+        "inputRequired": true,
+        "validator": validators.cardNumber
     },
     {
         "key": "b9a082c9-ce7c-4277-9d95-6c6b9ccdcd51",
-        "inputId": "sum",
-        "labelText": "Сумма перевода",
-        "inputPlaceholder": "От 1000 до 75000 ₽",
-        "inputPattern": "\\d+",
-        "inputMaxLength": "8",
-        "inputFormatHint": "От 1000 до 75000 ₽",
-        "inputRequired": true
-    },
-    {
-        "key": "b9a082c9-ce7c-4277-9d95-6c6b9ccdcd52",
         "inputId": "expiration",
-        "labelText": "Месяц/год окончания действия карты",
+        "labelText": "ММ/ГГ карты",
         "inputPlaceholder": "ММ/ГГ",
         "inputPattern": "\\d\\d/\\d\\d",
         "inputMaxLength": "5",
         "inputFormatHint": "ММ/ГГ",
-        "inputRequired": true
+        "inputRequired": true,
+        "validator": validators.expiration
     },
     {
-        "key": "b9a082c9-ce7c-4277-9d95-6c6b9ccdcd53",
+        "key": "b9a082c9-ce7c-4277-9d95-6c6b9ccdcd52",
         "inputId": "cvc",
         "labelText": "CVC",
         "inputPlaceholder": "",
         "inputPattern": "\\d{3}",
         "inputMaxLength": "3",
         "inputFormatHint": "Ровно три цифры",
-        "inputRequired": true
+        "inputRequired": true,
+        "validator": validators.cvc
+    },
+    {
+        "key": "b9a082c9-ce7c-4277-9d95-6c6b9ccdcd53",
+        "inputId": "sum",
+        "labelText": "Сумма перевода",
+        "inputPlaceholder": "От 1000 до 75000 ₽",
+        "inputPattern": "\\d+",
+        "inputMaxLength": "8",
+        "inputFormatHint": "От 1000 до 75000 ₽",
+        "inputRequired": true,
+        "validator": validators.sum
     },
     {
         "key": "b9a082c9-ce7c-4277-9d95-6c6b9ccdcd54",
@@ -46,7 +52,8 @@ export default [
         "inputPlaceholder": "До 150 символов",
         "inputMaxLength": "150",
         "inputFormatHint": "Максимум 150 символов",
-        "inputRequired": false
+        "inputRequired": false,
+        "validator": validators.comment
     },
     {
         "key": "b9a082c9-ce7c-4277-9d95-6c6b9ccdcd55",
@@ -55,6 +62,7 @@ export default [
         "inputPlaceholder": "Для квитанций об оплате",
         "inputPattern": ".+@.+\\..+",
         "inputFormatHint": "example@site.com",
-        "inputRequired": false
+        "inputRequired": false,
+        "validator": validators.email
     }
 ]

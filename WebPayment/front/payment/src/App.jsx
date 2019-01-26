@@ -1,12 +1,26 @@
 import React, { Component } from 'react';
 import {BrowserRouter as Router, Link, Route, Switch} from 'react-router-dom';
-
 import CardPayment from "./containers/cardPayment/cardPayment.jsx";
+import BankPayment from "./containers/bankPayment/bankPayment.jsx"
 import PaymentRequest from "./containers/paymentRequest/paymentRequest.jsx";
-
 import './App.css';
 
 export default class App extends Component {
+    constructor(props) {
+        super(props);
+        this.handleListItemChosen = this.handleListItemChosen.bind(this);
+    }
+
+    handleListItemChosen(event) {
+        if (this.refs.cardPaymentRef !== undefined)
+            this.refs.cardPaymentRef.className = "payment-api__li";
+        if (this.refs.bankPaymentRef !== undefined)
+            this.refs.bankPaymentRef.className = "payment-api__li";
+        if (this.refs.paymentRequestRef !== undefined)
+            this.refs.paymentRequestRef.className = "payment-api__li";
+        event.target.parentNode.className = "li-selected";
+    }
+
   render() {
     return (
       <div className="mainContainer">
@@ -27,12 +41,13 @@ export default class App extends Component {
             <Router>
                 <div>
                     <ul className="paymentApi-ul">
-                        <li className="payment-api__li"><Link to="/CardPayment">Заплатить</Link></li>
-                        <li className="payment-api__li"><Link to="/PaymentRequest">Запросить платеж</Link></li>
+                        <li className="li-selected" ref="cardPaymentRef" onClick={this.handleListItemChosen}><Link to="/CardPayment">Заплатить</Link></li>
+                        <li className="payment-api__li" ref="paymentRequestRef" onClick={this.handleListItemChosen}><Link to="/PaymentRequest">Запросить платеж</Link></li>
                     </ul>
                     <Switch>
                         <Route path="/CardPayment" component={PaymentMiniRouter} />
                         <Route path="/PaymentRequest" component={PaymentRequest} />
+                        <Route path="/" component={PaymentMiniRouter} />
                     </Switch>
                 </div>
             </Router>
@@ -54,16 +69,33 @@ export default class App extends Component {
 }
 
 class PaymentMiniRouter extends React.Component {
+    constructor(props) {
+        super(props);
+        this.handleListItemChosen = this.handleListItemChosen.bind(this);
+    }
+
+    handleListItemChosen(event) {
+        if (this.refs.cardPaymentRef !== undefined)
+            this.refs.cardPaymentRef.className = "payment-api__li";
+        if (this.refs.bankPaymentRef !== undefined)
+            this.refs.bankPaymentRef.className = "payment-api__li";
+        if (this.refs.paymentRequestRef !== undefined)
+            this.refs.paymentRequestRef.className = "payment-api__li";
+        event.target.parentNode.className = "li-selected";
+    }
+
     render() {
         return (
             <Router>
                 <div>
                     <ul className="paymentApi-ul">
-                        <li className="payment-api__li"><Link to="/CardPayment">C карты любого банка</Link></li>
-                        <li className="payment-api__li">Из своего интернет-банка</li>
+                        <li className="li-selected" ref="cardPaymentRef" onClick={this.handleListItemChosen}><Link to="/CardPayment">C карты любого банка</Link></li>
+                        <li className="payment-api__li" ref="bankPaymentRef" onClick={this.handleListItemChosen}><Link to="/BankPayment">Из своего интернет-банка</Link></li>
                     </ul>
                     <Switch>
                         <Route path="/CardPayment" component={CardPayment} />
+                        <Route path="/BankPayment" component={BankPayment} />
+                        <Route path="/" component={CardPayment} />
                     </Switch>
                 </div>
             </Router>

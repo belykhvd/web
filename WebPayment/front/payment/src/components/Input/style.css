@@ -2,5 +2,10 @@
     border: none;
     border-bottom: 1px solid #737373;
     text-align: center;
-    margin: auto 5px;
+    margin: 5px 5px;
+}
+
+label {
+    display: inline-block;
+    width: 100px;
 }

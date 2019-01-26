@@ -1,9 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { processPaymentRequest, returnToInitialState } from './paymentRequestActions.jsx'
+import { processPaymentRequest, returnToInitialState } from '../../redux/paymentRequestActions.jsx'
 import Input from '../../components/Input/input.jsx'
 import InputInitData from './inputInitData.jsx'
-import {SUBMIT_SUCCESS_STATE,SUBMIT_ERROR_STATE} from "./reduxStates.jsx";
+import {SUBMIT_SUCCESS_STATE,SUBMIT_ERROR_STATE} from "../../redux/reduxStates.jsx";
 
 class PaymentRequestComponent extends React.Component {
     constructor(props) {

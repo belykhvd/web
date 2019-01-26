@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Net.Mime;
 using System.Threading.Tasks;
 using DBRepository;
 using DBRepository.Interfaces;
@@ -47,6 +49,41 @@ namespace WebPayment.Controllers
             await paymentRepository.SaveCardPaymentAsync(payment).ConfigureAwait(false);
 
             return WrappedResponse<string>.Success();
+        }
+
+        [Route(nameof(ProcessBankPayment))]
+        [HttpGet]
+        public async Task<IActionResult> ProcessBankPayment
+        (
+            string inn,
+            string bic,
+            string accountNumber,
+            int vat,
+            decimal sum
+        )
+        {
+            var payment = new BankPayment
+            {
+                Inn = inn,
+                Bic = bic,
+                AccountNumber = accountNumber,
+                Vat = vat,
+                Sum = sum
+            };
+
+            var validationResult = payment.Validate();
+            if (!validationResult.IsValid)
+                return Json(WrappedResponse<string>.Fail($"Неверный формат: {validationResult.Error}"));
+
+            using (var buffer = new MemoryStream())
+            {
+                using (var streamWriter = new StreamWriter(buffer))
+                {
+                    await streamWriter.WriteLineAsync(payment.AsBankStatement());
+                }
+
+                return File(buffer.ToArray(), MediaTypeNames.Application.Octet, "");
+            }
         }
 
         [Route(nameof(ProcessPaymentRequest))]

@@ -19,7 +19,7 @@ namespace Models
         public static ValidationResult ValidateSum(this ValidationResult validationResult, decimal sum)
         {
             return validationResult.Decide(() => sum >= 1000 && sum <= 75000,
-                "Сумма перевода должны быть от 1000 до 75000 ₽");
+                "Сумма перевода должна быть от 1000 до 75000 ₽");
         }
 
         public static ValidationResult ValidateExpiration(this ValidationResult validationResult, string expiration)

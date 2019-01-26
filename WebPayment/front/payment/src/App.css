@@ -58,7 +58,7 @@
 
 a {
   text-decoration: none;
-  color: rgb(152, 118, 169); /*#530e8f;*/
+  /*color: rgb(152, 118, 169); /*#530e8f;*/
   margin: 5px;
 }
 
@@ -68,4 +68,12 @@ a {
 
 .payment-api__li {
   display: inline-block;
+}
+
+.li-selected {
+  display: inline-block;
+  /*background: #5b5b5b;*/
+  color: black;
+  font-weight: bold;
+  font-family: Verdana, serif;
 }

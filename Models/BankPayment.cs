@@ -20,5 +20,12 @@ namespace Models
                 .ValidateVat(Vat)
                 .ValidateSum(Sum);
         }
+
+        public string AsBankStatement()
+            => $"ИНН:{Inn}\n" +
+               $"БИК:{Bic}\n" +
+               $"Номер счета:{AccountNumber}\n" +
+               $"НДС:{Vat}\n" +
+               $"Сумма:{Sum}";
     }
 }

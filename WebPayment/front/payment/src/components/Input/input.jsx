@@ -1,7 +1,6 @@
 import React from 'react'
 import './style.css'
 
-
 export default class InputComponent extends React.Component {
     render() {
         const {props} = this.props;
@@ -13,6 +12,8 @@ export default class InputComponent extends React.Component {
                        id = {props.inputId}
                        value = {props.inputValue}
                        onChange = {props.inputOnChangeHandler}
+                       pattern = {props.inputPattern}
+                       //title = {props.inputFormatHint}
                        placeholder = {props.inputPlaceholder}
                        maxLength = {props.inputMaxLength}
                        required = {props.inputRequired}

@@ -1,5 +1,5 @@
 import "isomorphic-fetch"
-import {MARK_UNSAFE_PAYMENT_SUCCESS, REQUEST_FAIL, REQUEST_SUCCESS} from "./states.jsx";
+import {INITIAL_STATE, MARK_UNSAFE_PAYMENT_SUCCESS, REQUEST_FAIL, REQUEST_SUCCESS} from "./states.jsx";
 
 export function handleOnFulfilled(json) {
     return json.isSuccess
@@ -37,6 +37,26 @@ export function markUnsafePaymentAction(cardPaymentId, isSafe) {
     }
 }
 
+let download = require('./download.js');
+export function downloadFileAction(apiMethod, data, idPrefix) {
+    return dispatch => {
+        let offset = idPrefix.length;
+        let queryTrailer = '?';
+        for (let key in data) {
+            if (data.hasOwnProperty(key)) {
+                let backendKey = key.charAt(offset).toLowerCase() + key.substring(offset + 1);
+                queryTrailer += `${backendKey}=${data[key]}&`;
+            }
+        }
+        queryTrailer = queryTrailer.substr(0, queryTrailer.length - 1);
+        fetch(apiMethod + queryTrailer)
+            .then(r => r.blob())
+            .then(blob => download(blob, 'Выписка.txt'))
+            .then(() => dispatch(handleOnFulfilled({isSuccess: true})))
+            .catch(ex => dispatch(handleOnRejected(ex)));
+    }
+}
+
 export function sendAction(apiMethod, data, idPrefix) {
     return dispatch => {
         let offset = idPrefix.length;
@@ -53,4 +73,8 @@ export function sendAction(apiMethod, data, idPrefix) {
             .then(responseJson => dispatch(handleOnFulfilled(responseJson)))
             .catch(ex => dispatch(handleOnRejected(ex)));
     }
+}
+
+export function returnToInitialState() {
+    return (dispatch) => dispatch({type: INITIAL_STATE})
 }
