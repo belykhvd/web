@@ -9,8 +9,8 @@ export default {
       return value && value.match(/\d{16}/) ? ok() : error('Номер карты должен состоять из 16 цифр');
     },
     'accountNumber': value => {
-      let formatHint = 'Номер карты должен состоять из 16 цифр';
-      return value && value.length === 16 && value.match(/\d+/) ? ok() : error(formatHint);
+      let formatHint = 'Номер счета должен состоять из 20 цифр';
+      return value && value.length === 20 && value.match(/\d+/) ? ok() : error(formatHint);
     },
     'sum': value => {
         let formatHint = 'Сумма перевода должна быть от 1000 до 75000 ₽';

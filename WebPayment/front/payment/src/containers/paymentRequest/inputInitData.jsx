@@ -40,15 +40,10 @@ export default [
     {
         "key": "e919a613-45b1-4573-8f04-dc0c249e68A2",
         "inputType": "select",
-        "inputId": "paymentRequestVat",
+        "inputId": "vat",
         "labelText": "За что",
         "inputValues": ["Без НДС", "НДС 10%", "НДС 18%"],
-        "inputPlaceholder": "",
-        "inputPattern": ".+",
-        "inputMaxLength": "",
-        "inputFormatHint": "",
-        "inputRequired": true,
-        "validator": validators.vat
+        "optionKeys": [0, 1, 2]
     },
     {
         "key": "e919a613-45b1-4573-8f04-dc0c249e68A3",

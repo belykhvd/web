@@ -85,7 +85,7 @@ namespace Models
         public static ValidationResult ValidateVat(this ValidationResult validationResult, int vat)
         {
             return validationResult.Decide(() => vat == 0 || vat == 10 || vat == 18,
-                "Допустимые значения НДС: без НДС, 10%, 18%");
+                "Допустимые значения НДС: Без НДС, 10%, 18%");
         }
 
         public static ValidationResult ValidateAccountNumber(this ValidationResult validationResult, string accountNumber)

@@ -16,16 +16,16 @@ namespace WebPayment
 
             var builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json"); //1
-            var config = builder.Build(); // 1
+                .AddJsonFile("appsettings.json");
+            var config = builder.Build();
 
-            using (var scope = host.Services.CreateScope()) //2
+            using (var scope = host.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
 
                 var factory = services.GetRequiredService<IRepositoryContextFactory>();
 
-                //factory.CreateDbContext(config.GetConnectionString("DefaultConnection")).Database.Migrate(); // 3
+                factory.CreateDbContext(config.GetConnectionString("DefaultConnection")).Database.Migrate();
             }
 
             host.Run();

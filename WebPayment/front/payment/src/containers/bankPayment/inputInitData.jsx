@@ -43,12 +43,12 @@ export default [
         "inputId": "vat",
         "labelText": "За что",
         "inputValues": ["Без НДС", "НДС 10%", "НДС 18%"],
+        "optionKeys": [0, 1, 2],
         "inputPlaceholder": "",
         "inputPattern": ".+",
         "inputMaxLength": "",
         "inputFormatHint": "",
-        "inputRequired": true,
-        "validator": validators.vat
+        "inputRequired": true
     },
     {
         "key": "763d7ab9-0882-4df6-a3f0-35c043770f19",

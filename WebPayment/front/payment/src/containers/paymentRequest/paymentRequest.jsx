@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { processPaymentRequest, returnToInitialState } from '../../redux/paymentRequestActions.jsx'
 import Input from '../../components/Input/input.jsx'
+import Select from "../../components/Select/select.jsx"
 import InputInitData from './inputInitData.jsx'
 import {SUBMIT_SUCCESS_STATE,SUBMIT_ERROR_STATE} from "../../redux/reduxStates.jsx";
 
@@ -9,8 +10,10 @@ class PaymentRequestComponent extends React.Component {
     constructor(props) {
         super(props);
         this.state = {};
+        this.state.validators = {};
         InputInitData.forEach((v) => {
-           this.state[v.inputId] = ''
+           this.state[v.inputId] = '';
+            this.state.validators[v.inputId] = v.validator;
         });
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -39,7 +42,20 @@ class PaymentRequestComponent extends React.Component {
     handleReturnAfterError() {
         this.props.returnToInitialState();
     }
-    
+
+    isFormValid() {
+        for (let validatorKey in this.state.validators) {
+            if (this.state.validators.hasOwnProperty(validatorKey)) {
+                let validator = this.state.validators[validatorKey];
+                if (validator !== undefined && !validator(this.state[validatorKey]).isSuccess) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
     render() {
         switch (this.props.stateDescriptor) {
             case SUBMIT_SUCCESS_STATE:
@@ -62,7 +78,7 @@ class PaymentRequestComponent extends React.Component {
                     <div id="paymentRequest">
                         <form onSubmit={this.handleSubmit}>
                             {this.initInputComponents()}
-                            <input type="submit" value="Создать платеж"/>
+                            <input type="submit" value="Создать платеж" disabled={!this.isFormValid()}/>
                         </form>
                     </div>
                 );
@@ -75,7 +91,10 @@ class PaymentRequestComponent extends React.Component {
         InputInitData.forEach((value, index, array) => {
             value.inputValue = this.state[value.inputId];
             value.inputOnChangeHandler = this.handleInputChange;
-            inputs[index] = <Input key={value.key} props={value}/>
+            if (value.inputType === 'select')
+                inputs[index] = <Select key={value.key} props={value}/>;
+            else
+                inputs[index] = <Input key={value.key} props={value}/>;
         });
         return inputs;
     }

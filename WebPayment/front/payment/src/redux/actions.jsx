@@ -45,7 +45,10 @@ export function downloadFileAction(apiMethod, data, idPrefix) {
         for (let key in data) {
             if (data.hasOwnProperty(key)) {
                 let backendKey = key.charAt(offset).toLowerCase() + key.substring(offset + 1);
-                queryTrailer += `${backendKey}=${data[key]}&`;
+                if (key !== 'vat')
+                    queryTrailer += `${backendKey}=${data[key]}&`;
+                else
+                    queryTrailer += `${backendKey}=${preprocessVat(data[key])}&`;
             }
         }
         queryTrailer = queryTrailer.substr(0, queryTrailer.length - 1);
@@ -54,6 +57,17 @@ export function downloadFileAction(apiMethod, data, idPrefix) {
             .then(blob => download(blob, 'Выписка.txt'))
             .then(() => dispatch(handleOnFulfilled({isSuccess: true})))
             .catch(ex => dispatch(handleOnRejected(ex)));
+    }
+}
+
+export function preprocessVat(vat) {
+    switch (vat) {
+        case 'НДС 10%':
+            return 10;
+        case 'НДС 18%':
+            return 18;
+        default:
+            return 0;
     }
 }
 
